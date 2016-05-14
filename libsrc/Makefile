@@ -27,8 +27,8 @@ SRCEXT = cpp
 OBJEXT = cpp.o
 SOURCES = $(shell echo *.$(SRCEXT))
 OBJECTS = $(patsubst %,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-CC_FLAGS = -std=c++11 -pipe -fPIC -Wall -Wextra -O3
-LN_FLAGS = -std=c++11 -pipe -shared -Wall -Wextra -O3
+CC_FLAGS = -std=c++11 -stdlib=libstdc++ -lstdc++  -pipe -fPIC -Wall -Wextra -O3
+LN_FLAGS = -std=c++11 -stdlib=libstdc++ -lstdc++ -pipe -shared -Wall -Wextra -O3
 INC = -I .
 LIB = 
 
