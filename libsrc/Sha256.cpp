@@ -162,7 +162,7 @@ cutie::data *digest(cutie::data *bytes)
  
     SHA256 ctx = SHA256();
     ctx.init();
-    ctx.update( (unsigned char*)bytes->data, bytes->length);
+    ctx.update((unsigned char*)bytes->data, bytes->length);
     ctx.final(digest);
  
     size_t length = 2 * SHA256::DIGEST_SIZE + 1;
