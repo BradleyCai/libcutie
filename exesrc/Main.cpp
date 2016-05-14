@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <cerrno>
+#include <cstring>
 
 #include "Cutie.hpp"
 
@@ -113,24 +115,40 @@ void outputEndgame(bool winner) {
 
 int main(int argc, char *argv[])
 {
-	SessionType type = choice();
-	std::string ipaddress;
+	SessionType type;
+	std::string ipAddress;
 	int port;
 	
-	while (type != INVALID) {
+	do {
+		type = choice();
 		if (type == JOIN) {
 			std::cout << "What is the address you want to connect to? \n\n";
-			std::cin >> ipaddress;
+			std::cin >> ipAddress;
 			std::cout << "On what port? \n\n";
 			std::cin >> port;
+			str::cout<< "Looking for opponent...\n";
+			
+			if (cutie::joinSession(ipAddress, port)) {
+				str::cout << "Opponent found!\n";
+			}
+			else {
+				perror("Join failed: ");
+				type = INVALID;
+			}
 		}
 		else if (type == CREATE) {
-			// 
-		}
-		else {
+			std::cout << "Waiting for opponent to connect...\n";
 			
+			if (cutie::createSession(port)) {
+				str::cout << "Opponent found!\n";
+			}
+			else {
+				perror("Create failed: ");
+				type = INVALID;
+			}
 		}
-	}
+	} 
+	while (type != INVALID);
 	
 	//cutie::connect();
 
