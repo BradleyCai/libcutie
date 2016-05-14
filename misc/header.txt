@@ -1,5 +1,5 @@
 /*
- * Cutie.cpp
+ * (name of file)
  *
  * libcutie - Validate your opponent's data to detect cheating.
  * Copyright (c) 2016 Ammon Smith, Auggie Balquin, Bradley Cai
@@ -18,10 +18,4 @@
  * along with libcutie.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-#include "Cutie.hpp"
-
-namespace cutie {
-
-};
 

@@ -1,20 +1,20 @@
 # Makefile
 #
-# (header)
+# libcutie - Validate your opponent's data to detect cheating.
 # Copyright (c) 2016 Ammon Smith, Auggie Balquin, Bradley Cai
 # 
-# (program) is free software: you can redistribute it and/or modify
+# libcutie is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
-# the Free Software Foundation, either version 2.1 of the License, or
+# the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 # 
-# (program) is distributed in the hope that it will be useful,
+# libcutie is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU Lesser General Public License
-# along with barman.  If not, see <http://www.gnu.org/licenses/>.
+# along with libcutie.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 .PHONY: all force debug forcedebug test clean
@@ -27,7 +27,7 @@ SRCEXT = cpp
 OBJEXT = cpp.o
 SOURCES = $(shell echo *.$(SRCEXT))
 OBJECTS = $(patsubst %,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-FLAGS = -std=c++11 -pipe -shared -Wall -Wextra -O3
+FLAGS = -std=c++11 -pipe -Wall -Wextra -O3
 INC = -I .
 LIB = 
 
@@ -36,12 +36,12 @@ all: $(EXE)
 $(EXE): $(OBJECTS)
 	@mkdir -p '$(BUILDDIR)'
 	@echo '[LN] $(shell basename $(EXE))'
-	$(CC) $(FLAGS) $(LIB) $(DEBUG) $^ -o $(EXE)
+	@$(CC) $(FLAGS) $(LIB) $(DEBUG) $^ -o $(EXE)
 
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT)
 	@mkdir -p '$(BUILDDIR)'
 	@echo '[CC] $(shell basename $@)'
-	$(CC) $(FLAGS) $(LIB) $(INC) $(DEBUG) -c -o $@ $<
+	@$(CC) $(FLAGS) $(LIB) $(INC) $(DEBUG) -c -o $@ $<
 
 clean:
 	@echo '[RM] $(BUILDDIR)'

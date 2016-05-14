@@ -1,5 +1,5 @@
 /*
- * Cutie.cpp
+ * Cutie.hpp
  *
  * libcutie - Validate your opponent's data to detect cheating.
  * Copyright (c) 2016 Ammon Smith, Auggie Balquin, Bradley Cai
@@ -19,9 +19,24 @@
  *
  */
 
-#include "Cutie.hpp"
+#ifndef __CUTIE_HPP
+#define __CUTIE_HPP
+
+#include <netinet/in.h>
+#include <sys/socket.h>
 
 namespace cutie {
+    struct data {
+        void *ptr;
+        size_t bytes;
+    };
 
+    bool listen(sockaddr_in addr);
+    bool connect(sockaddr_in addr, unsigned int timeout);
+    bool init(data *bytes, unsigned int timeout);
+    void set_reject_time(unsigned int reject);
+    data *doturn(data *bytesToSend, unsigned int timeout);
 };
+
+#endif /* __CUTIE_HPP */
 
