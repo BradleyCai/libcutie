@@ -27,14 +27,14 @@ int choice()
 {
 	int res = 0;
 	
-	std::cout << "Would you like to create a game or join a game?" << endl;
-	std::cout << "1: Join\n2:Create\n> ";
+	std::cout << "Would you like to create a game or join a game?\n";
+	std::cout << "1: Join\n2:Create\n\n ";
 	std::cin >> res;
 	
-	cin >> res;
+	std::cin >> res;
 	
-	cin.clear();
-	cin.ignore(256, '\n');
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 	switch (res) {
 		case 1: 
 			return JOIN;
@@ -87,6 +87,18 @@ void updateScore(bool winner, int & myScore, int & theirScore)
 int main(int argc, char *argv[])
 {
 	SessionType type = choice();
+	char* ipAddress[15];
+	int port;
+	
+	if (type == JOIN) {
+		std::cout << "What is the address you want to connect to? \n\n";
+		cin >> ipAddress;
+		std::cout << "On what port? \n\n";
+		cin >> port;
+	}
+	else (type == CREATE) {
+		// listen
+	}
 	
 	//cutie::connect();
 
