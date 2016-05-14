@@ -27,9 +27,13 @@ SRCEXT = cpp
 OBJEXT = cpp.o
 SOURCES = $(shell echo *.$(SRCEXT))
 OBJECTS = $(patsubst %,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-FLAGS = -std=c++11 -stdlib=libstdc++ -lstdc++ -pipe -Wall -Wextra -O3
+FLAGS = -std=c++11 -pipe -Wall -Wextra -O3
 INC = -I . -I ../headers
 LIB = -L ../build -l cutie
+
+ifeq ($(shell uname -s),Darwin)
+	FLAGS += -stdlib=libstdc++ -lstdc++
+endif
 
 all: $(EXE)
 
