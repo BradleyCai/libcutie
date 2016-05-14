@@ -15,7 +15,8 @@ enum Move {
 	
 enum SessionType {
 	JOIN,
-	CREATE
+	CREATE,
+	INVALID
 };
 
 // void getPlayerTurn(enum Move & temp);
@@ -23,25 +24,25 @@ enum SessionType {
 // void updateScore(bool winner, int & myScore, int & theirScore);
 
 // 
-int choice() 
+SessionType choice() 
 {
 	int res = 0;
 	
-	std::cout << "Would you like to create a game or join a game?" << endl;
-	std::cout << "1: Join\n2:Create\n> ";
+	std::cout << "Would you like to create a game or join a game?\n";
+	std::cout << "1: Join\n2:Create\n\n ";
 	std::cin >> res;
 	
-	cin >> res;
+	std::cin >> res;
 	
-	cin.clear();
-	cin.ignore(256, '\n');
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
 	switch (res) {
 		case 1: 
 			return JOIN;
 		case 2:
 			return CREATE;
 		default:
-			return -1;
+			return INVALID;
 	}
 }
 
@@ -112,10 +113,26 @@ void outputEndgame(bool winner)
 	}
 }
 
- 
 int main(int argc, char *argv[])
 {
 	SessionType type = choice();
+	std::string ipaddress;
+	int port;
+	
+	while (type != INVALID) {
+		if (type == JOIN) {
+			std::cout << "What is the address you want to connect to? \n\n";
+			std::cin >> ipaddress;
+			std::cout << "On what port? \n\n";
+			std::cin >> port;
+		}
+		else if (type == CREATE) {
+			// 
+		}
+		else {
+			
+		}
+	}
 	
 	//cutie::connect();
 
