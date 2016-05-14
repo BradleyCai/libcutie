@@ -7,10 +7,46 @@
 //#include "Main.hpp"
 
 
-enum Move {ROCK, PAPER, SCISSORS};
+enum Move {
+	ROCK,
+	PAPER,
+	SCISSORS
+};
+	
+enum SessionType {
+	JOIN,
+	CREATE,
+	INVALID
+};
 
+// void getPlayerTurn(enum Move & temp);
+// void outputScore(int myScore, int theirScore);
+// void updateScore(bool winner, int & myScore, int & theirScore);
 
-void getPlayerTurn(enum Move & temp)
+// 
+SessionType choice() 
+{
+	int res = 0;
+	
+	std::cout << "Would you like to create a game or join a game?\n";
+	std::cout << "1: Join\n2:Create\n\n ";
+	std::cin >> res;
+	
+	std::cin >> res;
+	
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
+	switch (res) {
+		case 1: 
+			return JOIN;
+		case 2:
+			return CREATE;
+		default:
+			return INVALID;
+	}
+}
+
+void getPlayerTurn(Move& temp)
 {
 	int choice = 1;
 	std::cout << "Please enter your move!" << std::endl;
@@ -30,13 +66,13 @@ void getPlayerTurn(enum Move & temp)
 	}
 }
 
-void outputScore()
+void outputScore(int myScore, int theirScore)
 {
 	std::cout << "YOU: " << myScore << std::endl;
-	std::cout << "OPPONENT: " << theirTurn << std:: endl;
+	std::cout << "OPPONENT: " << theirScore << std:: endl;
 }
 
-void updateScore(bool winner) 
+void updateScore(bool winner, int & myScore, int & theirScore) 
 {
 	if (winner) {
 		myScore++;
@@ -46,51 +82,96 @@ void updateScore(bool winner)
 	return;
 } 
 
-// bool compareTurn(Move player){
+bool compareTurn(Move myTurn, Move theirTurn){
+	bool winner = false;
+	if (myTurn == theirTurn) {
+		winner = false;				
+	}
+	else if (myTurn == ROCK) {
+		winner = (theirTurn == SCISSORS)? true : false;
+	}
+	else if (myTurn == PAPER) {
+		winner = (theirTurn == ROCK)? true : false;
+	}
+	else {
+		winner = (theirTurn == PAPER)? true : false;
+	}
+	return winner;
+}
 
-// }
+void outputEndgame(bool winner) {
+
+	if (winner) {
+		std::cout << "Victory!" << std::endl;
+		std::cout << "YOU WON" << std::endl;
+	}
+	else {
+		std::cout << "Defeat!" << std::endl;
+		std::cout << "YOU LOST" << std::endl;
+	}
+}
 
 int main(int argc, char *argv[])
 {
+	SessionType type = choice();
+	std::string ipaddress;
+	int port;
+	
+	while (type != INVALID) {
+		if (type == JOIN) {
+			std::cout << "What is the address you want to connect to? \n\n";
+			std::cin >> ipaddress;
+			std::cout << "On what port? \n\n";
+			std::cin >> port;
+		}
+		else if (type == CREATE) {
+			// 
+		}
+		else {
+			
+		}
+	}
+	
 	//cutie::connect();
 
 	//if(cutie::connect(address, timeout)) {
 
-		//bool gameStarted = gameInit(0,0);
+		bool gameStarted = true;//gameInit(0,0);
 		bool gameActive = true;
 
 		if (gameStarted) {
 			int myScore = 0;
 			int theirScore = 0;
 			bool winner = false;
-			Move myTurn = 1;
-			Move theirTurn = 1;
+			Move myTurn = ROCK;
+			Move theirTurn = ROCK;
 
 
 			while (gameActive) {
 
-				outputScore();
+				//Outputs Score
+				outputScore(myScore, theirScore);
+				//Prompts User for turn
 				getPlayerTurn(myTurn);
 
-				theirTurn = doTurn(myTurn);
+				//theirTurn =  cutie::doTurn(myTurn);
+				winner =  compareTurn(myTurn,theirTurn);
+		
+				updateScore(winner, myScore, theirScore);
 
-				if (myTurn == theirTurn) {
-					winner = false;				
+				if (myScore == 5 || theirScore == 5) {
+					gameActive = false;
+					if (myScore == 5) {
+						winner = true;
+					}
+					else {
+						winner = false;
+					}
 				}
-				else if (myTurn == ROCK) {
-					winner = (theirTurn == SCISSORS)? true : false;
-				}
-				else if (myTurn == PAPER) {
-					winner = (theirTurn == ROCK)? true : false;
-				}
-				else {
-					winner = (theirTurn == PAPER)? true : false;
-				}
-
-				updateScore(winner);
 
 			}
 
+			outputEndgame(winner);
 
 		}
 	//}
