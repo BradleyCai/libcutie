@@ -10,7 +10,13 @@
 enum Move {ROCK, PAPER, SCISSORS};
 
 
-void getPlayerTurn(enum Move & temp)
+// void getPlayerTurn(enum Move & temp);
+// void outputScore(int myScore, int theirScore);
+// void updateScore(bool winner, int & myScore, int & theirScore);
+
+
+
+void getPlayerTurn(Move & temp)
 {
 	int choice = 1;
 	std::cout << "Please enter your move!" << std::endl;
@@ -30,13 +36,13 @@ void getPlayerTurn(enum Move & temp)
 	}
 }
 
-void outputScore()
+void outputScore(int myScore, int theirScore)
 {
 	std::cout << "YOU: " << myScore << std::endl;
-	std::cout << "OPPONENT: " << theirTurn << std:: endl;
+	std::cout << "OPPONENT: " << theirScore << std:: endl;
 }
 
-void updateScore(bool winner) 
+void updateScore(bool winner, int & myScore, int & theirScore) 
 {
 	if (winner) {
 		myScore++;
@@ -45,7 +51,6 @@ void updateScore(bool winner)
 	theirScore++;
 	return;
 } 
-
 // bool compareTurn(Move player){
 
 // }
@@ -56,23 +61,23 @@ int main(int argc, char *argv[])
 
 	//if(cutie::connect(address, timeout)) {
 
-		//bool gameStarted = gameInit(0,0);
+		bool gameStarted = true;//gameInit(0,0);
 		bool gameActive = true;
 
 		if (gameStarted) {
 			int myScore = 0;
 			int theirScore = 0;
 			bool winner = false;
-			Move myTurn = 1;
-			Move theirTurn = 1;
+			Move myTurn = ROCK;
+			Move theirTurn = ROCK;
 
 
 			while (gameActive) {
 
-				outputScore();
+				outputScore(myScore, theirScore);
 				getPlayerTurn(myTurn);
 
-				theirTurn = doTurn(myTurn);
+				//theirTurn =  cutie::doTurn(myTurn);
 
 				if (myTurn == theirTurn) {
 					winner = false;				
@@ -87,7 +92,7 @@ int main(int argc, char *argv[])
 					winner = (theirTurn == PAPER)? true : false;
 				}
 
-				updateScore(winner);
+				updateScore(winner, myScore, theirScore);
 
 			}
 
