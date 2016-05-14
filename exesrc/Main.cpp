@@ -101,7 +101,12 @@ bool compareTurn(Move myTurn, Move theirTurn){
 void outputEndgame(bool winner) {
 
 	if (winner) {
-
+		std::cout << "Victory!" << std::endl;
+		std::cout << "YOU WON" << std::endl;
+	}
+	else {
+		std::cout << "Defeat!" << std::endl;
+		std::cout << "YOU LOST" << std::endl;
 	}
 }
 
@@ -149,7 +154,7 @@ int main(int argc, char *argv[])
 
 			}
 
-			outputEndgame(winner, myScore);
+			outputEndgame(winner);
 
 		}
 	//}
