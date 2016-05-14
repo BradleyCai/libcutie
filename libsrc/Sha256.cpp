@@ -36,7 +36,9 @@
  */
 
 #include <cstring>
+#include <string>
 #include <fstream>
+
 #include "Sha256.hpp"
 
 namespace sha256 {
@@ -153,21 +155,27 @@ void SHA256::final(unsigned char *digest)
     }
 }
 
-std::string sha256(char *input, size_t length)
+cutie::data *digest(cutie::data *bytes)
 {
     unsigned char digest[SHA256::DIGEST_SIZE];
     memset(digest,0,SHA256::DIGEST_SIZE);
  
     SHA256 ctx = SHA256();
     ctx.init();
-    ctx.update( (unsigned char*)input, length);
+    ctx.update( (unsigned char*)bytes->data, bytes->length);
     ctx.final(digest);
  
-    char buf[2*SHA256::DIGEST_SIZE+1];
+    size_t length = 2 * SHA256::DIGEST_SIZE + 1;
+    char *buf = new char[length];
     buf[2*SHA256::DIGEST_SIZE] = 0;
     for (unsigned int i = 0; i < SHA256::DIGEST_SIZE; i++)
         sprintf(buf+i*2, "%02x", digest[i]);
-    return std::string(buf);
+
+    cutie::data *ptr = new cutie::data;
+    ptr->data = buf;
+    ptr->length = length;
+
+    return ptr;
 }
 
 }; /* namespace sha256 */

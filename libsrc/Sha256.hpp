@@ -37,7 +37,10 @@
 
 #ifndef __SHA256_HPP
 #define __SHA256_HPP
+
 #include <string>
+
+#include "Cutie.hpp"
 
 namespace sha256 {
  
@@ -64,7 +67,7 @@ protected:
     uint32 m_h[8];
 };
  
-std::string sha256(std::string input);
+cutie::data *digest(cutie::data *bytes);
  
 #define SHA2_SHFR(x, n)    (x >> n)
 #define SHA2_ROTR(x, n)   ((x >> n) | (x << ((sizeof(x) << 3) - n)))

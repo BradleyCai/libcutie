@@ -26,28 +26,15 @@
 #include "Hash.hpp"
 #include "Sha256.hpp"
 
-static cutie::data *stringToData(const std::string &str);
-
 namespace hash {
     cutie::data *doHash(cutie::data *bytes, int algorithm)
     {
         switch (algorithm) {
             case SHA256:
-                return stringToData(sha256::sha256(bytes->data));
+                return sha256::digest(bytes);
             default:
                 return 0;
         }
     }
-}
-
-static cutie::data *stringToData(const std::string &str)
-{
-    cutie::data *ptr = new cutie::data;
-    ptr->data = new char[str.length()];
-    ptr->length = str.length();
-
-    memcpy(ptr->data, str.c_str(), str.length());
-
-    return ptr;
 }
 
