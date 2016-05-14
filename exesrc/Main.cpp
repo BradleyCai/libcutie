@@ -126,10 +126,10 @@ int main(int argc, char *argv[])
 			std::cin >> ipAddress;
 			std::cout << "On what port? \n\n";
 			std::cin >> port;
-			str::cout<< "Looking for opponent...\n";
+			std::cout<< "Looking for opponent...\n";
 			
-			if (cutie::joinSession(ipAddress, port)) {
-				str::cout << "Opponent found!\n";
+			if (cutie::joinSession(ipAddress.c_str(), port)) {
+				std::cout << "Opponent found!\n";
 			}
 			else {
 				perror("Join failed: ");
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 			std::cout << "Waiting for opponent to connect...\n";
 			
 			if (cutie::createSession(port)) {
-				str::cout << "Opponent found!\n";
+				std::cout << "Opponent found!\n";
 			}
 			else {
 				perror("Create failed: ");
@@ -192,8 +192,7 @@ int main(int argc, char *argv[])
 			outputEndgame(winner);
 
 		}
-	//}
+		
+	cutie::endSession();
     return 0;
 }
-
-
