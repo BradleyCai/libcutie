@@ -7,16 +7,45 @@
 //#include "Main.hpp"
 
 
-enum Move {ROCK, PAPER, SCISSORS};
-
+enum Move {
+	ROCK,
+	PAPER,
+	SCISSORS
+};
+	
+enum SessionType {
+	JOIN,
+	CREATE
+};
 
 // void getPlayerTurn(enum Move & temp);
 // void outputScore(int myScore, int theirScore);
 // void updateScore(bool winner, int & myScore, int & theirScore);
 
+// 
+int choice() 
+{
+	int res = 0;
+	
+	std::cout << "Would you like to create a game or join a game?" << endl;
+	std::cout << "1: Join\n2:Create\n> ";
+	std::cin >> res;
+	
+	cin >> res;
+	
+	cin.clear();
+	cin.ignore(256, '\n');
+	switch (res) {
+		case 1: 
+			return JOIN;
+		case 2:
+			return CREATE;
+		default:
+			return -1;
+	}
+}
 
-
-void getPlayerTurn(Move & temp)
+void getPlayerTurn(Move& temp)
 {
 	int choice = 1;
 	std::cout << "Please enter your move!" << std::endl;
@@ -57,6 +86,8 @@ void updateScore(bool winner, int & myScore, int & theirScore)
 
 int main(int argc, char *argv[])
 {
+	SessionType type = choice();
+	
 	//cutie::connect();
 
 	//if(cutie::connect(address, timeout)) {
