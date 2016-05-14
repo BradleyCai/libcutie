@@ -28,7 +28,7 @@ OBJEXT = cpp.o
 SOURCES = $(shell echo *.$(SRCEXT))
 OBJECTS = $(patsubst %,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 FLAGS = -std=c++11 -pipe -Wall -Wextra -O3
-INC = -I .
+INC = -I . -I ../headers
 LIB = -L ../build -l cutie
 
 all: $(EXE)
