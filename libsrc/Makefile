@@ -27,7 +27,8 @@ SRCEXT = cpp
 OBJEXT = cpp.o
 SOURCES = $(shell echo *.$(SRCEXT))
 OBJECTS = $(patsubst %,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-FLAGS = -std=c++11 -pipe -Wall -Wextra -O3
+CC_FLAGS = -std=c++11 -pipe -fPIC -Wall -Wextra -O3
+LN_FLAGS = -std=c++11 -pipe -shared -Wall -Wextra -O3
 INC = -I .
 LIB = 
 
@@ -36,12 +37,12 @@ all: $(EXE)
 $(EXE): $(OBJECTS)
 	@mkdir -p '$(BUILDDIR)'
 	@echo '[LN] $(shell basename $(EXE))'
-	@$(CC) $(FLAGS) $(LIB) $(DEBUG) $^ -o $(EXE)
+	@$(CC) $(LN_FLAGS) $(LIB) $(DEBUG) $^ -o $(EXE)
 
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT)
 	@mkdir -p '$(BUILDDIR)'
 	@echo '[CC] $(shell basename $@)'
-	@$(CC) $(FLAGS) $(LIB) $(INC) $(DEBUG) -c -o $@ $<
+	@$(CC) $(CC_FLAGS) $(LIB) $(INC) $(DEBUG) -c -o $@ $<
 
 clean:
 	@echo '[RM] $(BUILDDIR)'

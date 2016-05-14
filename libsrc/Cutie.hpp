@@ -31,11 +31,13 @@ namespace cutie {
         size_t bytes;
     };
 
-    bool listen(sockaddr_in addr);
-    bool connect(sockaddr_in addr, unsigned int timeout);
+    bool listen(int port);
+    bool connect(const char *ipAddress, int port);
     bool init(data *bytes, unsigned int timeout);
-    void set_reject_time(unsigned int reject);
-    data *doturn(data *bytesToSend, unsigned int timeout);
+    data *doTurn(data *bytesToSend, unsigned int timeout);
+
+    void setPort(int port);
+    void setRejectTimes(unsigned int reject);
 };
 
 #endif /* __CUTIE_HPP */

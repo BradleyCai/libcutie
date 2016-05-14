@@ -19,9 +19,63 @@
  *
  */
 
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
 #include "Cutie.hpp"
 
-namespace cutie {
+namespace {
+    int sockfd = -1;
+    unsigned int rejectTimes = 10;
+};
 
+namespace cutie {
+    bool createSession(int port)
+    {
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0) {
+            return false;
+        }
+
+        sockaddr_in addr;
+
+        addr.sin_addr.s_addr = INADDR_ANY;
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(port);
+
+        int ret = bind(sockfd, (const sockaddr *)(&addr), sizeof(sockaddr_in));
+        if (ret < 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool joinSession(const char *ipAddress, int port)
+    {
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0) {
+            return false;
+        }
+
+        sockaddr_in addr;
+
+        addr.sin_addr.s_addr = inet_addr(ipAddress);
+        addr.sin_family = AF_INET;
+        addr.sin_port = htons(port);
+
+        int ret = connect(sockfd, (sockaddr *)(&addr), sizeof(addr));
+        if (ret < 0) {
+            return false;
+        }
+
+        return true;
+    }
+        
+    void setRejectTimes(unsigned int value)
+    {
+        rejectTimes = value;
+    }
 };
 
