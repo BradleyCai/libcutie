@@ -110,7 +110,7 @@ namespace cutie {
         return true;
     }
 
-    bool init(data *bytes, std::function<bool (data *)> check)
+    bool init(data *bytes, bool (*check)(data *))
     {
         if (amHost) {
             if (!sendInitData(bytes)) {
@@ -131,7 +131,7 @@ namespace cutie {
         }
     }
 
-    data *doTurn(data *bytesToSend, std::function<bool (data *)> check)
+    data *doTurn(data *bytesToSend, bool (*check)(data *))
     {
         int ret;
         data *hash = getHashData(bytesToSend);
