@@ -39,8 +39,10 @@ namespace cutie {
     bool joinSession(const char *ipAddress, int port);
     bool endSession();
 
-    bool init(data *bytes, std::function<bool (data *)> check);
-    data *doTurn(data *bytesToSend, std::function<bool (data *)> check);
+    bool init(data *bytes, bool (*check)(data *));
+    // bool init(data *bytes, std::function<bool (data *)> check);
+    data *doTurn(data *bytesToSend, bool (*check)(data *));
+    // data *doTurn(data *bytesToSend, std::function<bool (data *)> check);
 };
 
 #endif /* __CUTIE_HPP */
