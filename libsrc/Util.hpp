@@ -1,5 +1,5 @@
 /*
- * Cutie.hpp
+ * Util.hpp
  *
  * libcutie - Validate your opponent's data to detect cheating.
  * Copyright (c) 2016 Ammon Smith, Auggie Balquin, Bradley Cai
@@ -19,29 +19,15 @@
  *
  */
 
-#ifndef __CUTIE_HPP
-#define __CUTIE_HPP
+#ifndef __UTIL_HPP
+#define __UTIL_HPP
 
-#include <functional>
+#include <sys/types.h>
 
-#include <netinet/in.h>
-#include <sys/socket.h>
-
-namespace cutie {
-    struct data {
-        char *data;
-        size_t length;
-    };
-
-    void setRejectTimes(unsigned int reject);
-
-    bool createSession(int port);
-    bool joinSession(const char *ipAddress, int port);
-    bool endSession();
-
-    bool init(data *bytes, std::function<bool (data *)> check);
-    data *doTurn(data *bytesToSend, std::function<bool (data *)> check);
+namespace util {
+    bool sendLength(int fd, size_t length);
+    size_t getLength(int fd, bool &success);
 };
 
-#endif /* __CUTIE_HPP */
+#endif /* __UTIL_HPP */
 
