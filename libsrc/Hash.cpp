@@ -1,5 +1,5 @@
 /*
- * Cutie.hpp
+ * Hash.cpp
  *
  * libcutie - Validate your opponent's data to detect cheating.
  * Copyright (c) 2016 Ammon Smith, Auggie Balquin, Bradley Cai
@@ -19,25 +19,35 @@
  *
  */
 
-#ifndef __CUTIE_HPP
-#define __CUTIE_HPP
+#include <cstring>
+#include <string>
 
-#include <netinet/in.h>
-#include <sys/socket.h>
+#include "Cutie.hpp"
+#include "Hash.hpp"
+#include "Sha256.hpp"
 
-namespace cutie {
-    struct data {
-        char *data;
-        size_t length;
-    };
+static cutie::data *stringToData(const std::string &str);
 
-    void setRejectTimes(unsigned int reject);
+namespace hash {
+    cutie::data *doHash(cutie::data *bytes, int algorithm)
+    {
+        switch (algorithm) {
+            case SHA256:
+                return stringToData(sha256(bytes->data));
+            default:
+                return 0;
+        }
+    }
+}
 
-    bool listen(int port);
-    bool connect(const char *ipAddress, int port);
-    bool init(data *bytes);
-    data *doTurn(data *bytesToSend);
-};
+static cutie::data *stringToData(const std::string &str)
+{
+    cutie::data *ptr = new cutie::data;
+    ptr->data = new char[str.length()];
+    ptr->length = str.length();
 
-#endif /* __CUTIE_HPP */
+    memcpy(ptr->data, str.c_str(), str.length());
+
+    return ptr;
+}
 
