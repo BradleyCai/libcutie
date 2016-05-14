@@ -43,7 +43,7 @@ namespace {
 };
 
 static cutie::data *getHashData(const cutie::data *bytesToSend);
-static cutie::data *getInitData(std::function<bool (cutie::data *)> check);
+static cutie::data *getInitData(bool (*check)(cutie::data *));
 static bool sendInitData(cutie::data *bytes);
 
 namespace cutie {
@@ -185,7 +185,7 @@ static cutie::data *getHashData(const cutie::data *bytesToSend)
     return hash::doHash(bytesToHash, algorithm);
 }
 
-static cutie::data *getInitData(std::function<bool (cutie::data *)> check)
+static cutie::data *getInitData(bool (*check)(cutie::data *))
 {
     cutie::data *bytes;
     int ret;
