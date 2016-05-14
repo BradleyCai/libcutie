@@ -24,13 +24,20 @@
 #include <sys/socket.h>
 
 #include "Cutie.hpp"
+#include "Hash.hpp"
 
 namespace {
     int sockfd = -1;
     unsigned int rejectTimes = 10;
+    int algorithm = -1;
 };
 
 namespace cutie {
+    void setRejectTimes(unsigned int value)
+    {
+        rejectTimes = value;
+    }
+
     bool createSession(int port)
     {
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -72,10 +79,14 @@ namespace cutie {
 
         return true;
     }
-        
-    void setRejectTimes(unsigned int value)
+
+    data *doTurn(data *bytesToSend)
     {
-        rejectTimes = value;
+        /* Send hash */
+
+        /* Wait until they send theirs */
+
+        /* Send data */
     }
 };
 

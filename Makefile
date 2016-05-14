@@ -17,14 +17,16 @@
 # along with barman.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-.PHONY: all force debug forcedebug clean
+.PHONY: all exe lib force debug forcedebug clean
 
 LIB = build/libcutie.so
 EXE = build/rockpaperscissors
 
-all:
-	make -C libsrc
-	make -C exesrc
+all: $(LIB) $(EXE)
+
+lib: $(LIB)
+
+exe: $(EXE)
 
 $(LIB):
 	make -C libsrc
