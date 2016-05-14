@@ -6,7 +6,13 @@
 //#include "Main.hpp"
 
 
+enum Move {ROCK, PAPER, SCISSORS};
 
+
+
+void getPlayerTurn(enum Move * temp) {
+	std::cout << "Please enter your move!"
+}
 
 int main(int argc, char *argv[])
 {
@@ -20,32 +26,29 @@ int main(int argc, char *argv[])
 		if (gameStarted) {
 			int myScore = 0;
 			int theirScore = 0;
-			int myTurn = 1;
-			int theirTurn = 1;
+			Move myTurn = 1;
+			Move theirTurn = 1;
 
 			while (gameActive) {
 
-			theirTurn = doTurn(myTurn);
+				getPlayerTurn();
 
-			if (myTurn == theirTurn) {
-				std::cout << "Draw" << std::endl;
+				theirTurn = doTurn(myTurn);
+
+				if (myTurn == theirTurn) {
+
+					std::cout << "Draw Placeholder" << std::endl;
+				}
+
+				if (myTurn == ROCK) {
+
+				}
+
 			}
-
-			if (myTurn > theirTurn) {
-
-
-			}
-
-			}
-
 
 
 		}
-
-
 	}
-
-
     return 0;
 }
 
