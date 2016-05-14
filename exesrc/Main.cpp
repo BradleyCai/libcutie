@@ -81,7 +81,8 @@ void updateScore(bool winner, int & myScore, int & theirScore)
 	return;
 } 
 
-bool compareTurn(Move myTurn, Move theirTurn){
+bool compareTurn(Move myTurn, Move theirTurn)
+{
 	bool winner = false;
 	if (myTurn == theirTurn) {
 		winner = false;				
@@ -98,7 +99,8 @@ bool compareTurn(Move myTurn, Move theirTurn){
 	return winner;
 }
 
-void outputEndgame(bool winner) {
+void outputEndgame(bool winner)
+{
 
 	if (winner) {
 		std::cout << "Victory!" << std::endl;
@@ -138,10 +140,12 @@ int main(int argc, char *argv[])
 				getPlayerTurn(myTurn);
 
 				//theirTurn =  cutie::doTurn(myTurn);
-				winner =  compareTurn(myTurn,theirTurn);
+				winner = compareTurn(myTurn,theirTurn);
 		
 				updateScore(winner, myScore, theirScore);
 
+
+				//Endgame check  Set final winner
 				if (myScore == 5 || theirScore == 5) {
 					gameActive = false;
 					if (myScore == 5) {
