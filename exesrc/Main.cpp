@@ -51,10 +51,32 @@ void updateScore(bool winner, int & myScore, int & theirScore)
 	theirScore++;
 	return;
 } 
-// bool compareTurn(Move player){
 
-// }
+bool compareTurn(Move myTurn, Move theirTurn){
+	bool winner = false;
+	if (myTurn == theirTurn) {
+		winner = false;				
+	}
+	else if (myTurn == ROCK) {
+		winner = (theirTurn == SCISSORS)? true : false;
+	}
+	else if (myTurn == PAPER) {
+		winner = (theirTurn == ROCK)? true : false;
+	}
+	else {
+		winner = (theirTurn == PAPER)? true : false;
+	}
+	return winner;
+}
 
+void outputEndgame(bool winner) {
+
+	if (winner) {
+
+	}
+}
+
+ 
 int main(int argc, char *argv[])
 {
 	//cutie::connect();
@@ -74,28 +96,29 @@ int main(int argc, char *argv[])
 
 			while (gameActive) {
 
+				//Outputs Score
 				outputScore(myScore, theirScore);
+				//Prompts User for turn
 				getPlayerTurn(myTurn);
 
 				//theirTurn =  cutie::doTurn(myTurn);
-
-				if (myTurn == theirTurn) {
-					winner = false;				
-				}
-				else if (myTurn == ROCK) {
-					winner = (theirTurn == SCISSORS)? true : false;
-				}
-				else if (myTurn == PAPER) {
-					winner = (theirTurn == ROCK)? true : false;
-				}
-				else {
-					winner = (theirTurn == PAPER)? true : false;
-				}
-
+				winner =  compareTurn(myTurn,theirTurn);
+		
 				updateScore(winner, myScore, theirScore);
+
+				if (myScore == 5 || theirScore == 5) {
+					gameActive = false;
+					if (myScore == 5) {
+						winner = true;
+					}
+					else {
+						winner = false;
+					}
+				}
 
 			}
 
+			outputEndgame(winner, myScore);
 
 		}
 	//}
