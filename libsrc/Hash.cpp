@@ -33,7 +33,7 @@ namespace hash {
     {
         switch (algorithm) {
             case SHA256:
-                return stringToData(sha256(bytes->data));
+                return stringToData(sha256::sha256(bytes->data));
             default:
                 return 0;
         }

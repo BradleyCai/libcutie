@@ -38,6 +38,8 @@
 #ifndef __SHA256_HPP
 #define __SHA256_HPP
 #include <string>
+
+namespace sha256 {
  
 class SHA256
 {
@@ -87,6 +89,8 @@ std::string sha256(std::string input);
            | ((uint32) *((str) + 1) << 16)    \
            | ((uint32) *((str) + 0) << 24);   \
 }
+}; /* namespace sha256 */
+
 #endif /* __SHA256_HPP */
 
 
