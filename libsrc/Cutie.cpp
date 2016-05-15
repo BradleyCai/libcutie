@@ -44,6 +44,7 @@ namespace {
 
 static cutie::data *getData(bool (*check)(cutie::data *));
 static bool sendData(cutie::data *bytes);
+static bool returnsTrue(cutie::data *bytes);
 
 namespace cutie {
     void setRejectTimes(unsigned int value)
@@ -138,13 +139,31 @@ namespace cutie {
     data *doTurn(data *bytesToSend, bool (*check)(data *), bool &forgery)
     {
         hash::hashInfo *hash = hash::getHashData(bytesToSend, randBytesLength, algorithm);
-        data *theirData = new data;
-        (void)(theirData);
-        forgery = true;
+        data *theirHash;
+
+        if (amHost) {
+            if (!sendData(hash->hashBytes)) {
+                return NULL;
+            }
+
+            theirHash = getData(returnsTrue);
+            if (!theirHash) {
+                return NULL;
+            }
+        } else {
+            theirHash = getData(returnsTrue);
+            if (!theirHash) {
+                return NULL;
+            }
+
+            if (!sendData(hash->hashBytes)) {
+                return NULL;
+            }
+        }
 
         data *theirBytes;
         if (amHost) {
-            if (!sendData(hash->hashBytes)) {
+            if (!sendData(hash->dataBytes)) {
                 return NULL;
             }
 
@@ -158,13 +177,38 @@ namespace cutie {
                 return NULL;
             }
 
-            if (!sendData(hash->hashBytes)) {
+            if (!sendData(hash->dataBytes)) {
                 return NULL;
             }
         }
 
-        // forgery = hash::verifyHashData();
+        data *theirRand;
+        if (amHost) {
+            if (!sendData(hash->randBytes)) {
+                return NULL;
+            }
 
+            theirRand = getData(returnsTrue);
+            if (!theirRand) {
+                return NULL;
+            }
+        } else {
+            theirRand = getData(returnsTrue);
+            if (!theirRand) {
+                return NULL;
+            }
+
+            if (!sendData(hash->randBytes)) {
+                return NULL;
+            }
+        }
+
+        hash::hashInfo theirInfo;
+        theirInfo.dataBytes = theirBytes;
+        theirInfo.hashBytes = theirHash;
+        theirInfo.randBytes = theirRand;
+
+        forgery = hash::verifyHashData(&theirInfo);
         return theirBytes;
     }
 };
@@ -226,6 +270,12 @@ static bool sendData(cutie::data *bytes)
         }
     }
 
+    return true;
+}
+
+static bool returnsTrue(cutie::data *bytes)
+{
+    (void)(bytes);
     return true;
 }
 

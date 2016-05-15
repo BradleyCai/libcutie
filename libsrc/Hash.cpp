@@ -60,11 +60,14 @@ namespace hash {
         dataToHash.length = length;
         cutie::data *hash = doHash(&dataToHash, algorithm);
 
+        cutie::data *rand = new cutie::data;
+        rand->data = randBytes;
+        rand->length = randBytesLength;
+
         hashInfo *info = new hashInfo;
         info->dataBytes = bytesToSend;
         info->hashBytes = hash;
-        info->randBytes = randBytes;
-        info->randBytesLength = randBytesLength;
+        info->randBytes = rand;
 
         return info;
     }
@@ -72,11 +75,11 @@ namespace hash {
     bool verifyHashData(const hashInfo *info, int algorithm)
     {
         /* Concatenate strings */
-        size_t length = info->dataBytes->length + info->randBytesLength;
+        size_t length = info->dataBytes->length + info->randBytes->length;
         char bytesToHash[length];
 
         memcpy(&bytesToHash, info->dataBytes->data, info->dataBytes->length);
-        memcpy(&bytesToHash + info->dataBytes->length, info->randBytes, info->randBytesLength);
+        memcpy(&bytesToHash + info->dataBytes->length, info->randBytes, info->randBytes->length);
 
         /* Calculate hash */
         cutie::data dataToHash;

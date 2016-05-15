@@ -32,13 +32,12 @@ namespace hash {
     struct hashInfo {
         cutie::data *dataBytes;
         cutie::data *hashBytes;
-        char *randBytes;
-        size_t randBytesLength;
-        void deleteHashData(const hashInfo *hash);
+        cutie::data *randBytes;
     };
 
     hashInfo *getHashData(cutie::data *bytesToSend, size_t randBytesLength, int algorithm);
     bool verifyHashData(const hashInfo *hash);
+    void deleteHashData(const hashInfo *hash);
 };
 
 #endif /* __HASH_HPP */
