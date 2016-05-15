@@ -52,8 +52,6 @@ SessionType choice()
 	std::cout << "1: Join\n2:Create\n\n ";
 	std::cin >> res;
 	
-	std::cin >> res;
-	
 	std::cin.clear();
 	std::cin.ignore(256, '\n');
 	switch (res) {
