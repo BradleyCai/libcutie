@@ -38,9 +38,7 @@ clean:
 	make -C libsrc clean
 	make -C exesrc clean
 
-force:
-	make -C libsrc force
-	make -C exesrc force
+force: clean all
 
 debug:
 	make -C libsrc debug
