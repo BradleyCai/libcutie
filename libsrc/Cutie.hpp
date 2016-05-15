@@ -22,8 +22,6 @@
 #ifndef __CUTIE_HPP
 #define __CUTIE_HPP
 
-#include <functional>
-
 #include <netinet/in.h>
 #include <sys/socket.h>
 
@@ -40,9 +38,7 @@ namespace cutie {
     bool endSession();
 
     bool init(data *bytes, bool (*check)(data *));
-    // bool init(data *bytes, std::function<bool (data *)> check);
     data *doTurn(data *bytesToSend, bool (*check)(data *));
-    // data *doTurn(data *bytesToSend, std::function<bool (data *)> check);
 };
 
 #endif /* __CUTIE_HPP */
