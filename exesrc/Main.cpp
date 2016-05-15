@@ -65,6 +65,7 @@ SessionType choice()
 	}
 }
 
+namespace {
 	void getPlayerTurn(Move& temp)
 	{
 		int choice = 1;
