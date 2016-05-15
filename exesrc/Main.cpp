@@ -139,6 +139,16 @@ namespace {
 		}
 		return false;
 	}
+
+	void testForgery(bool forgery) {
+
+		if (forgery) {
+			std::cout << "OPPONENT falsified data" << std::endl;
+			return;
+		}	
+
+		std::cout << "Valid response" << std::endl;
+	}
 };
 
 // void getPlayerTurn(enum Move & temp);
@@ -216,6 +226,8 @@ int main(int argc, char *argv[])
 				bool forgery = false;
 				Opponent = *(cutie::doTurn(&Player, checkInput, forgery));
 				theirTurn = static_cast<Move>(*(Opponent.data));
+
+				testForgery(forgery);
 
 				winner = compareTurn(myTurn,theirTurn);
 				
