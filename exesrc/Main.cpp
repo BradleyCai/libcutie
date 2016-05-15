@@ -40,28 +40,30 @@ enum SessionType {
 	INVALID
 };
 
-namespace {
-	SessionType choice() 
-	{
-		int res = 0;
-		
-		std::cout << "Would you like to create a game or join a game?\n";
-		std::cout << "1: Join\n2:Create\n\n ";
-		std::cin >> res;
-		
-		std::cin >> res;
-		
-		std::cin.clear();
-		std::cin.ignore(256, '\n');
-		switch (res) {
-			case 1: 
-				return JOIN;
-			case 2:
-				return CREATE;
-			default:
-				return INVALID;
-		}
+// void getPlayerTurn(enum Move & temp);
+// void outputScore(int myScore, int theirScore);
+// void updateScore(bool winner, int & myScore, int & theirScore);
+
+// 
+SessionType choice() 
+{
+	int res = 0;
+	
+	std::cout << "Would you like to create a game or join a game?\n";
+	std::cout << "1: Join\n2:Create\n\n ";
+	std::cin >> res;
+	
+	std::cin.clear();
+	std::cin.ignore(256, '\n');
+	switch (res) {
+		case 1: 
+			return JOIN;
+		case 2:
+			return CREATE;
+		default:
+			return INVALID;
 	}
+}
 
 	void getPlayerTurn(Move& temp)
 	{
