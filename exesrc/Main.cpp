@@ -130,24 +130,24 @@ namespace {
 		}
 	}
 
-	// char* turnConvert(Move turn) {
-	// 	if (turn == ROCK) {
-	// 		return new char(1);
-	// 	}
-	// 	else if (turn == PAPER) {
-	// 		return new char(2);
-	// 	}
-	// 	else {
-	// 		return new char(3);
-	// 	}
-	// }
+
 
 	bool checkInput(cutie::data * data) {
 		char* check = data->data;
-		if (check[0] == ROCK || check[0] == SCISSORS || check[0] == SCISSORS) {
+		if (check[0] == ROCK || check[0] == PAPER || check[0] == SCISSORS) {
 			return true;
 		}
 		return false;
+	}
+
+	void testForgery(bool forgery) {
+
+		if (forgery) {
+			std::cout << "OPPONENT falsified data" << std::endl;
+			return;
+		}	
+
+		std::cout << "Valid response" << std::endl;
 	}
 };
 
@@ -198,7 +198,7 @@ int main(int argc, char *argv[])
 	//cutie::connect();
 
 	//if(cutie::connect(address, timeout)) {
-		//ask user for reject input
+		//sets reject input
 		cutie::setRejectTimes(5);
 		bool gameStarted = true;//gameInit(0,0);
 		bool gameActive = true;
@@ -223,11 +223,14 @@ int main(int argc, char *argv[])
 				getPlayerTurn(myTurn);
 				Player.data = new char(static_cast<int>(myTurn));
 
-				Opponent = *(cutie::doTurn(&Player, checkInput));
+				bool forgery = false;
+				Opponent = *(cutie::doTurn(&Player, checkInput, forgery));
 				theirTurn = static_cast<Move>(*(Opponent.data));
 
+				testForgery(forgery);
+
 				winner = compareTurn(myTurn,theirTurn);
-		
+				
 				updateScore(winner, myScore, theirScore);
 
 
