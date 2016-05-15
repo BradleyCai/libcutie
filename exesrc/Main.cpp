@@ -24,6 +24,7 @@
 #include <cerrno>
 #include <cstring>
 
+
 #include "Cutie.hpp"
 //#include "Main.hpp"
 
@@ -64,70 +65,100 @@ SessionType choice()
 	}
 }
 
-void getPlayerTurn(Move& temp)
-{
-	int choice = 1;
-	std::cout << "Please enter your move!" << std::endl;
-	std::cout << "1: ROCK" << std::endl;
-	std::cout << "2: PAPER" << std::endl;
-	std::cout << "3: SCISSORS!" << std::endl;
-	std::cin >> choice;
+	void getPlayerTurn(Move& temp)
+	{
+		int choice = 1;
+		std::cout << "Please enter your move!" << std::endl;
+		std::cout << "1: ROCK" << std::endl;
+		std::cout << "2: PAPER" << std::endl;
+		std::cout << "3: SCISSORS!" << std::endl;
+		std::cin >> choice;
 
-	if (choice == 1) {
-		temp = ROCK;
+		if (choice == 1) {
+			temp = ROCK;
+		}
+		else if (choice == 2) {
+			temp =  PAPER;
+		}
+		else {
+			temp = SCISSORS;
+		}
 	}
-	else if (choice == 2) {
-		temp =  PAPER;
-	}
-	else {
-		temp = SCISSORS;
-	}
-}
 
-void outputScore(int myScore, int theirScore)
-{
-	std::cout << "YOU: " << myScore << std::endl;
-	std::cout << "OPPONENT: " << theirScore << std:: endl;
-}
+	void outputScore(int myScore, int theirScore)
+	{
+		std::cout << "YOU: " << myScore << std::endl;
+		std::cout << "OPPONENT: " << theirScore << std:: endl;
+	}
 
-void updateScore(bool winner, int & myScore, int & theirScore) 
-{
-	if (winner) {
-		myScore++;
+	void updateScore(bool winner, int & myScore, int & theirScore) 
+	{
+		if (winner) {
+			myScore++;
+			return;
+		}
+		theirScore++;
 		return;
-	}
-	theirScore++;
-	return;
-} 
+	} 
 
-bool compareTurn(Move myTurn, Move theirTurn){
-	bool winner = false;
-	if (myTurn == theirTurn) {
-		winner = false;				
+	bool compareTurn(Move myTurn, Move theirTurn)
+	{
+		bool winner = false;
+		if (myTurn == theirTurn) {
+			winner = false;				
+		}
+		else if (myTurn == ROCK) {
+			winner = (theirTurn == SCISSORS)? true : false;
+		}
+		else if (myTurn == PAPER) {
+			winner = (theirTurn == ROCK)? true : false;
+		}
+		else {
+			winner = (theirTurn == PAPER)? true : false;
+		}
+		return winner;
 	}
-	else if (myTurn == ROCK) {
-		winner = (theirTurn == SCISSORS)? true : false;
-	}
-	else if (myTurn == PAPER) {
-		winner = (theirTurn == ROCK)? true : false;
-	}
-	else {
-		winner = (theirTurn == PAPER)? true : false;
-	}
-	return winner;
-}
 
-void outputEndgame(bool winner) {
+	void outputEndgame(bool winner)
+	{
 
-	if (winner) {
-		std::cout << "Victory!" << std::endl;
-		std::cout << "YOU WON" << std::endl;
+		if (winner) {
+			std::cout << "Victory!" << std::endl;
+			std::cout << "YOU WON" << std::endl;
+		}
+		else {
+			std::cout << "Defeat!" << std::endl;
+			std::cout << "YOU LOST" << std::endl;
+		}
 	}
-	else {
-		std::cout << "Defeat!" << std::endl;
-		std::cout << "YOU LOST" << std::endl;
+
+
+
+	bool checkInput(cutie::data * data) {
+		char* check = data->data;
+		if (check[0] == ROCK || check[0] == PAPER || check[0] == SCISSORS) {
+			return true;
+		}
+		return false;
 	}
-}
+
+	void testForgery(bool forgery) {
+
+		if (forgery) {
+			std::cout << "OPPONENT falsified data" << std::endl;
+			return;
+		}	
+
+		std::cout << "Valid response" << std::endl;
+	}
+};
+
+// void getPlayerTurn(enum Move & temp);
+// void outputScore(int myScore, int theirScore);
+// void updateScore(bool winner, int & myScore, int & theirScore);
+
+// 
+
 
 int main(int argc, char *argv[])
 {
@@ -169,7 +200,8 @@ int main(int argc, char *argv[])
 	//cutie::connect();
 
 	//if(cutie::connect(address, timeout)) {
-
+		//sets reject input
+		cutie::setRejectTimes(5);
 		bool gameStarted = true;//gameInit(0,0);
 		bool gameActive = true;
 
@@ -180,6 +212,10 @@ int main(int argc, char *argv[])
 			Move myTurn = ROCK;
 			Move theirTurn = ROCK;
 
+			cutie::data Opponent;
+			cutie::data Player;
+			Opponent.length = 1;
+			Player.length = 1;
 
 			while (gameActive) {
 
@@ -187,13 +223,21 @@ int main(int argc, char *argv[])
 				outputScore(myScore, theirScore);
 				//Prompts User for turn
 				getPlayerTurn(myTurn);
+				Player.data = new char(static_cast<int>(myTurn));
 
-				//theirTurn =  cutie::doTurn(myTurn);
-				winner =  compareTurn(myTurn,theirTurn);
-		
+				bool forgery = false;
+				Opponent = *(cutie::doTurn(&Player, checkInput, forgery));
+				theirTurn = static_cast<Move>(*(Opponent.data));
+
+				testForgery(forgery);
+
+				winner = compareTurn(myTurn,theirTurn);
+				
 				updateScore(winner, myScore, theirScore);
 
-				if (myScore == 5 || theirScore == 5) {
+
+				//Endgame check  Set final winner
+				if (myScore >= 5 || theirScore >= 5) {
 					gameActive = false;
 					if (myScore == 5) {
 						winner = true;
