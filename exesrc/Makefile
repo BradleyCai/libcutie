@@ -32,7 +32,7 @@ INC = -I . -I ../headers
 LIB = -L ../build -l cutie
 
 ifeq ($(shell uname -s),Darwin)
-	FLAGS += -stdlib=libstdc++ -lstdc++
+	FLAGS += -stdlib=libstdc++ -lstdc++ -std=c++11
 endif
 
 all: $(EXE)

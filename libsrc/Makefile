@@ -38,7 +38,7 @@ ifeq ($(shell uname -s),Darwin)
 endif
 
 all: $(EXE)
-
+	
 $(EXE): $(OBJECTS)
 	@mkdir -p '$(BUILDDIR)'
 	@echo '[LN] $(shell basename $(EXE))'
