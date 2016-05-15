@@ -29,7 +29,16 @@ namespace hash {
         SHA256,
     };
 
-    cutie::data *doHash(cutie::data *bytes, int algorithm);
+    struct hashInfo {
+        cutie::data *dataBytes;
+        cutie::data *hashBytes;
+        char *randBytes;
+        size_t randBytesLength;
+        void deleteHashData(const hashInfo *hash);
+    };
+
+    hashInfo *getHashData(cutie::data *bytesToSend, size_t randBytesLength, int algorithm);
+    bool verifyHashData(const hashInfo *hash);
 };
 
 #endif /* __HASH_HPP */

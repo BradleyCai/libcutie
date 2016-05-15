@@ -42,9 +42,8 @@ namespace {
     int algorithm = hash::SHA256;
 };
 
-static cutie::data *getHashData(const cutie::data *bytesToSend);
-static cutie::data *getInitData(bool (*check)(cutie::data *));
-static bool sendInitData(cutie::data *bytes);
+static cutie::data *getData(bool (*check)(cutie::data *));
+static bool sendData(cutie::data *bytes);
 
 namespace cutie {
     void setRejectTimes(unsigned int value)
@@ -114,99 +113,77 @@ namespace cutie {
     {
         data *theirBytes;
         if (amHost) {
-            if (!sendInitData(bytes)) {
+            if (!sendData(bytes)) {
                 return false;
             }
 
-            theirBytes = getInitData(check);
+            theirBytes = getData(check);
             if (!theirBytes) {
                 return false;
             }
         } else {
-            theirBytes = getInitData(check);
+            theirBytes = getData(check);
             if (!theirBytes) {
                 return false;
             }
 
-            if (!sendInitData(bytes)) {
+            if (!sendData(bytes)) {
                 return false;
             }
         }
 
-        return theirBytes;
+        return true;
     }
 
-    data *doTurn(data *bytesToSend, bool (*check)(data *))
+    data *doTurn(data *bytesToSend, bool (*check)(data *), bool &forgery)
     {
-        int ret;
-        data *hash = getHashData(bytesToSend);
-        (void)(hash);
-        (void)(check);
+        hash::hashInfo *hash = hash::getHashData(bytesToSend, randBytesLength, algorithm);
+        data *theirData = new data;
+        (void)(theirData);
+        forgery = true;
 
+        data *theirBytes;
         if (amHost) {
-            ret = send(sockfd, bytesToSend->data, bytesToSend->length, 0);
+            if (!sendData(hash->hashBytes)) {
+                return NULL;
+            }
 
-            if (ret < 0) {
+            theirBytes = getData(check);
+            if (!theirBytes) {
                 return NULL;
             }
         } else {
+            theirBytes = getData(check);
+            if (!theirBytes) {
+                return NULL;
+            }
+
+            if (!sendData(hash->hashBytes)) {
+                return NULL;
+            }
         }
 
-        ret = send(sockfd, bytesToSend->data, bytesToSend->length, 0);
-        
-        if (ret < 0) {
-            return NULL;
-        }
+        // forgery = hash::verifyHashData();
 
-        return NULL; //
+        return theirBytes;
     }
 };
 
-
-static cutie::data *getHashData(const cutie::data *bytesToSend)
-{
-    /* Get random string */
-    FILE *randFh;
-    char *randBytes = new char[randBytesLength];
-
-    randFh = fopen("/dev/urandom", "r");
-
-    if (randFh == NULL) {
-        return NULL;
-    }
-
-    if (fgets(randBytes, randBytesLength, randFh) == NULL) {
-        delete randBytes;
-        return NULL;
-    }
-
-    /* Concatenate bytes + rand */
-    cutie::data *bytesToHash = new cutie::data;
-    bytesToHash->data = new char[bytesToSend->length + randBytesLength];
-    bytesToHash->length = bytesToSend->length + randBytesLength;
-
-    memcpy(bytesToHash->data, bytesToSend->data, bytesToSend->length);
-    memcpy(bytesToHash->data + bytesToSend->length, randBytes, randBytesLength);
-
-    /* Generate hash */
-    return hash::doHash(bytesToHash, algorithm);
-}
-
-static cutie::data *getInitData(bool (*check)(cutie::data *))
+static cutie::data *getData(bool (*check)(cutie::data *))
 {
     cutie::data *bytes = new cutie::data;
     int ret;
+    bool success;
 
-    for (unsigned i = 0; i < rejectTimes; i++) {
-        bool success;
-        bytes->length = util::getLength(sockfd, success);
-        bytes->data = new char[bytes->length];
+    bytes->length = util::getLength(sockfd, success);
 
-        if (!success) {
-            delete bytes->data;
-            return NULL;
-        }
+    if (!success) {
+        return NULL;
+    }
 
+    bytes->data = new char[bytes->length];
+
+    for (unsigned int i = 0; i < rejectTimes; i++) {
         ret = recv(sockfd, bytes->data, bytes->length, 0);
 
         if (ret < 0) {
@@ -214,7 +191,6 @@ static cutie::data *getInitData(bool (*check)(cutie::data *))
         }
 
         success = check(bytes);
-
         ret = send(sockfd, &success, 1, 0);
 
         if (ret < 0) {
@@ -227,15 +203,16 @@ static cutie::data *getInitData(bool (*check)(cutie::data *))
     return NULL;
 }
 
-static bool sendInitData(cutie::data *bytes)
+static bool sendData(cutie::data *bytes)
 {
     char response = 0;
     int ret;
-    for (unsigned i = 0; !response; i++) {
-        if (!util::sendLength(sockfd, bytes->length)) {
-            return false;
-        }
 
+    if (!util::sendLength(sockfd, bytes->length)) {
+        return false;
+    }
+
+    for (unsigned int i = 0; !response; i++) {
         ret = send(sockfd, bytes->data, bytes->length, 0);
 
         if (ret < 0) {
@@ -251,3 +228,4 @@ static bool sendInitData(cutie::data *bytes)
 
     return true;
 }
+

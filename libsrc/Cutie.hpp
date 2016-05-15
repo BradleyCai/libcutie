@@ -38,7 +38,7 @@ namespace cutie {
     bool endSession();
 
     bool init(data *bytes, bool (*check)(data *));
-    data *doTurn(data *bytesToSend, bool (*check)(data *));
+    data *doTurn(data *bytesToSend, bool (*check)(data *), bool &forgery);
 };
 
 #endif /* __CUTIE_HPP */
