@@ -19,8 +19,8 @@
  *
  */
 
+#include <cstdio>
 #include <cstring>
-#include <functional>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -43,7 +43,7 @@ namespace {
 };
 
 static cutie::data *getHashData(const cutie::data *bytesToSend);
-static cutie::data *getInitData(std::function<bool (cutie::data *)> check);
+static cutie::data *getInitData(bool (*check)(cutie::data *));
 static bool sendInitData(cutie::data *bytes);
 
 namespace cutie {
@@ -110,18 +110,21 @@ namespace cutie {
         return true;
     }
 
-    bool init(data *bytes, std::function<bool (data *)> check)
+    bool init(data *bytes, bool (*check)(data *))
     {
+        data *theirBytes;
         if (amHost) {
             if (!sendInitData(bytes)) {
                 return false;
             }
 
-            if (!getInitData(check)) {
+            theirBytes = getInitData(check);
+            if (!theirBytes) {
                 return false;
             }
         } else {
-            if (!getInitData(check)) {
+            theirBytes = getInitData(check);
+            if (!theirBytes) {
                 return false;
             }
 
@@ -129,12 +132,16 @@ namespace cutie {
                 return false;
             }
         }
+
+        return theirBytes;
     }
 
-    data *doTurn(data *bytesToSend, std::function<bool (data *)> check)
+    data *doTurn(data *bytesToSend, bool (*check)(data *))
     {
         int ret;
         data *hash = getHashData(bytesToSend);
+        (void)(hash);
+        (void)(check);
 
         if (amHost) {
             ret = send(sockfd, bytesToSend->data, bytesToSend->length, 0);
@@ -185,9 +192,9 @@ static cutie::data *getHashData(const cutie::data *bytesToSend)
     return hash::doHash(bytesToHash, algorithm);
 }
 
-static cutie::data *getInitData(std::function<bool (cutie::data *)> check)
+static cutie::data *getInitData(bool (*check)(cutie::data *))
 {
-    cutie::data *bytes;
+    cutie::data *bytes = new cutie::data;
     int ret;
 
     for (unsigned i = 0; i < rejectTimes; i++) {
