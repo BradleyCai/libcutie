@@ -36,7 +36,7 @@ namespace hash {
     };
 
     hashInfo *getHashData(cutie::data *bytesToSend, size_t randBytesLength, int algorithm);
-    bool verifyHashData(const hashInfo *hash);
+    bool verifyHashData(const hashInfo *hash, int algorithm);
     void deleteHashData(const hashInfo *hash);
 };
 

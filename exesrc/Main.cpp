@@ -155,10 +155,7 @@ namespace {
 // void outputScore(int myScore, int theirScore);
 // void updateScore(bool winner, int & myScore, int & theirScore);
 
-// 
-
-
-int main(int argc, char *argv[])
+int main()
 {
 	SessionType type;
 	std::string ipAddress;
@@ -216,7 +213,6 @@ int main(int argc, char *argv[])
 			Player.length = 1;
 
 			while (gameActive) {
-
 				//Outputs Score
 				outputScore(myScore, theirScore);
 				//Prompts User for turn
@@ -230,27 +226,22 @@ int main(int argc, char *argv[])
 				testForgery(forgery);
 
 				winner = compareTurn(myTurn,theirTurn);
-				
 				updateScore(winner, myScore, theirScore);
-
 
 				//Endgame check  Set final winner
 				if (myScore >= 5 || theirScore >= 5) {
 					gameActive = false;
 					if (myScore == 5) {
 						winner = true;
-					}
-					else {
+					} else {
 						winner = false;
 					}
 				}
-
 			}
-
 			outputEndgame(winner);
-
 		}
 		
 	cutie::endSession();
     return 0;
 }
+

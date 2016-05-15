@@ -208,7 +208,7 @@ namespace cutie {
         theirInfo.hashBytes = theirHash;
         theirInfo.randBytes = theirRand;
 
-        forgery = hash::verifyHashData(&theirInfo);
+        forgery = hash::verifyHashData(&theirInfo, algorithm);
         return theirBytes;
     }
 };
