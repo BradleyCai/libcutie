@@ -21,7 +21,7 @@
 
 CC = g++
 BUILDDIR = ../build
-EXE = ../build/tictactoe
+EXE = ../build/rockpaperscissors
 
 SRCEXT = cpp
 OBJEXT = cpp.o

@@ -1,10 +1,31 @@
+/*
+ * "Main.cpp"
+ *
+ * libcutie - Validate your opponent's data to detect cheating.
+ * Copyright (c) 2016 Ammon Smith, Auggie Balquin, Bradley Cai
+ * 
+ * libcutie is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * libcutie is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with libcutie.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+ 
 #include <iostream>
 #include <string>
+#include <cerrno>
+#include <cstring>
 
 
 #include "Cutie.hpp"
-
-
 //#include "Main.hpp"
 
 enum Move {
@@ -135,24 +156,40 @@ namespace {
 
 int main(int argc, char *argv[])
 {
-	SessionType type = choice();
-	std::string ipaddress;
+	SessionType type;
+	std::string ipAddress;
 	int port;
 	
-	while (type != INVALID) {
+	do {
+		type = choice();
 		if (type == JOIN) {
 			std::cout << "What is the address you want to connect to? \n\n";
-			std::cin >> ipaddress;
+			std::cin >> ipAddress;
 			std::cout << "On what port? \n\n";
 			std::cin >> port;
+			std::cout<< "Looking for opponent...\n";
+			
+			if (cutie::joinSession(ipAddress.c_str(), port)) {
+				std::cout << "Opponent found!\n";
+			}
+			else {
+				perror("Join failed: ");
+				type = INVALID;
+			}
 		}
 		else if (type == CREATE) {
-			// 
-		}
-		else {
+			std::cout << "Waiting for opponent to connect...\n";
 			
+			if (cutie::createSession(port)) {
+				std::cout << "Opponent found!\n";
+			}
+			else {
+				perror("Create failed: ");
+				type = INVALID;
+			}
 		}
-	}
+	} 
+	while (type != INVALID);
 	
 	//cutie::connect();
 
@@ -206,8 +243,7 @@ int main(int argc, char *argv[])
 			outputEndgame(winner);
 
 		}
-	//}
+		
+	cutie::endSession();
     return 0;
 }
-
-
