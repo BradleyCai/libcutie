@@ -142,8 +142,12 @@ namespace {
 	// 	}
 	// }
 
-	bool checkInput(char* data) {
-		
+	bool checkInput(cutie::data * data) {
+		char* check = data->data;
+		if (check[0] == ROCK || check[0] == SCISSORS || check[0] == SCISSORS) {
+			return true;
+		}
+		return false;
 	}
 };
 
@@ -219,7 +223,7 @@ int main(int argc, char *argv[])
 				getPlayerTurn(myTurn);
 				Player.data = new char(static_cast<int>(myTurn));
 
-				Opponent = cutie::doTurn(Player, );
+				Opponent = *(cutie::doTurn(&Player, checkInput));
 				theirTurn = static_cast<Move>(*(Opponent.data));
 
 				winner = compareTurn(myTurn,theirTurn);
